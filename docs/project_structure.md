@@ -18,7 +18,7 @@ golang-quant/
 │   ├── router.go
 │   └── views/
 │       └── index.html
-├── 📦 go.mod
+└── 📦 go.mod
 ```
 ## Description
 ```
