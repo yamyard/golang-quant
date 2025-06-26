@@ -30,3 +30,12 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Ignore Windows Zone Identifier files
+*:Zone.Identifier
+
+# Ignore editor backup files
+*~
+
+# Ignore all .bak files
+*.bak
