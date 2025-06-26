@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Go 量化交易平台</title>
+</head>
+<body>
+  <h1>欢迎使用 Go 量化交易平台</h1>
+  <p>功能开发中：获取数据、运行策略、回测展示</p>
+
+  <button onclick="runBacktest()">运行回测 (AAPL)</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function runBacktest() {
+      document.getElementById('result').innerText = '正在运行回测...';
+      try {
+        const resp = await fetch('/api/backtest?symbol=AAPL', { method: 'POST' });
+        if (!resp.ok) {
+          throw new Error('网络错误：' + resp.status);
+        }
+        const data = await resp.json();
+        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById('result').innerText = '请求失败: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
