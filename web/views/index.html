@@ -1,28 +1,46 @@
+<!--
+本 HTML 文件是 Go 量化交易平台的前端页面，主要用于展示平台欢迎信息和提供回测操作按钮。
+
+- 标准 HTML5 文档，语言设置为中文（zh-CN）
+- 页面标题为“Go 量化交易平台”
+-->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <title>Go 量化交易平台</title>
+  <meta charset="UTF-8" /> <!-- 设置网页字符集为 UTF-8，支持中文显示 -->
+  <title>Go 量化交易平台</title> <!-- 网页标题 -->
 </head>
 <body>
+  <!-- 主标题，欢迎语 -->
   <h1>欢迎使用 Go 量化交易平台</h1>
+  <!-- 简要说明当前实现的主要功能 -->
   <p>功能开发中：获取数据、运行策略、回测展示</p>
 
+  <!-- 回测按钮，点击时调用 runBacktest() 函数 -->
   <button onclick="runBacktest()">运行回测 (AAPL)</button>
+  <!-- 结果展示区域，初始为空，回测结果将在此显示 -->
   <pre id="result"></pre>
 
   <script>
+    /**
+     * runBacktest 函数：点击按钮后触发，向后端发起回测请求
+     * - 首先在页面显示“正在运行回测...”
+     * - 使用 fetch 向 '/api/backtest?symbol=AAPL' 发送 POST 请求
+     * - 如果请求成功，将返回的 JSON 结果格式化后显示在页面
+     * - 如果请求失败，显示错误提示
+     */
     async function runBacktest() {
       document.getElementById('result').innerText = '正在运行回测...';
       try {
-        const resp = await fetch('/api/backtest?symbol=AAPL', { method: 'POST' });
+        const resp = await fetch('/api/backtest?symbol=AAPL', { method: 'POST' }); // 发送回测请求
         if (!resp.ok) {
           throw new Error('网络错误：' + resp.status);
         }
         const data = await resp.json();
-        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+        document.getElementById('result').innerText = JSON.stringify(data, null, 2); // 显示回测结果
       } catch (e) {
-        document.getElementById('result').innerText = '请求失败: ' + e.message;
+        document.getElementById('result').innerText = '请求失败: ' + e.message; // 显示错误信息
       }
     }
   </script>
