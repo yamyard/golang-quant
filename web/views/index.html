@@ -59,11 +59,20 @@
             '请求失败: ' + (data.error || ('网络错误：' + resp.status));
           return;
         }
-        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
-      } catch (e) {
-        document.getElementById('result').innerText = '请求失败: ' + e.message;
-      }
-    }
+        // 展示信号和价格
+        let output = `股票: ${data.symbol}\n最终资产: ${data.final_value}\n\n信号:\n`;
+        if(data.signals && data.prices){
+			for(let i=0; i<data.signals.length; i++){
+				output += `Day ${i+1}: Price=${data.prices[i]}, Signal=${data.signals[i]}\n`;
+			}
+		} else {
+			output += JSON.stringify(data, null, 2);
+		}
+		document.getElementById('result').innerText = output;
+	  } catch (e) {
+		document.getElementById('result').innerText = '请求失败: ' + e.message;
+	  }
+	}
   </script>
 </body>
 </html>

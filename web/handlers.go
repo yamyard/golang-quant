@@ -54,7 +54,9 @@ func RunBacktest(c *gin.Context) {
     finalValue := backtest.RunBacktest(prices, signals)
     c.JSON(http.StatusOK, gin.H{
         "symbol":      symbol,
-        "final_value": finalValue,
+	"final_value": finalValue,
+	"signals":     signals,
+	"prices":      prices,
     })
 }
 
