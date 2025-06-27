@@ -27,8 +27,7 @@ golang-quant/
 ## Description
 ```
 Descriptions for each part:
-
-    backtest/
+- backtest/
     Contains the core backtesting engine logic, responsible for simulating trading strategies over historical data.
 
     backtest/engine.go
