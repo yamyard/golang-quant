@@ -3,7 +3,7 @@ A lightweight quantitative trading platform implemented in Golang, featuring pri
 
 ## Install Dependencies
 ```
-go run ./cmd/api/main.go
+go mod tidy
 ```
 
 ## Start the Project
