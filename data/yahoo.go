@@ -1,8 +1,8 @@
 package data
 
+// 暂时使用模拟数据
 func FetchYahooData(symbol string) ([]float64, error) {
-    // 返回AAPL真实历史收盘价（2024年6月17日至26日）
-    // 如需更多天数，可继续补充
+    // 返回AAPL历史收盘价（2024年6月17日至26日）
     return []float64{
         216.67, // 2024-06-17
         218.45, // 2024-06-18
