@@ -44,9 +44,9 @@ Defines HTTP handlers for API endpoints.
 Sets up routing for the web server.
 - web/views/index.html  
 The main HTML page for the web interface.
-- go.mod
+- go.mod  
 The Go module definition file, declaring dependencies.
-- Makefile
+- Makefile  
 Automation script for building, running, and managing the project.
-- README.md
+- README.md  
 The main documentation file, providing an overview and usage instructions for the project.
