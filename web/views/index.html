@@ -2,28 +2,39 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Go 量化交易平台</title>
+  <title>Golang 量化交易平台</title>
 </head>
 <body>
-  <h1>欢迎使用 Go 量化交易平台</h1>
-  <p>功能开发中：获取数据、运行策略、回测展示</p>
+  <h1>欢迎使用 Golang 量化交易平台</h1>
+
+  <!-- 股票代码输入框 -->
+  <label for="symbol-input">股票代码：</label>
+  <input id="symbol-input" type="text" placeholder="请输入股票代码" />
+  <br><br>
 
   <!-- 获取价格按钮 -->
-  <button onclick="getPrice()">获取价格 (AAPL)</button>
+  <button onclick="getPrice()">获取价格</button>
   <pre id="price-result"></pre>
 
   <!-- 回测按钮 -->
-  <button onclick="runBacktest()">运行回测 (AAPL)</button>
+  <button onclick="runBacktest()">运行回测</button>
   <pre id="result"></pre>
 
   <script>
-    /**
-     * 获取价格函数：点击按钮后向后端 /api/data?symbol=AAPL 发起 GET 请求
-     */
+    // 获取股票代码
+    function getSymbol() {
+      return document.getElementById('symbol-input').value.trim().toUpperCase();
+    }
+    // 获取价格
     async function getPrice() {
+      const symbol = getSymbol();
+      if (!symbol) {
+        document.getElementById('price-result').innerText = '请输入股票代码';
+        return;
+      }
       document.getElementById('price-result').innerText = '正在获取价格...';
       try {
-        const resp = await fetch('/api/data?symbol=AAPL');
+        const resp = await fetch('/api/data?symbol=' + encodeURIComponent(symbol));
         let data;
         try {
           data = await resp.json();
@@ -40,14 +51,16 @@
         document.getElementById('price-result').innerText = '请求失败: ' + e.message;
       }
     }
-
-    /**
-     * 回测函数，无需更改
-     */
+    // 回测
     async function runBacktest() {
+      const symbol = getSymbol();
+      if (!symbol) {
+        document.getElementById('result').innerText = '请输入股票代码';
+        return;
+      }
       document.getElementById('result').innerText = '正在运行回测...';
       try {
-        const resp = await fetch('/api/backtest?symbol=AAPL', { method: 'POST' });
+        const resp = await fetch('/api/backtest?symbol=' + encodeURIComponent(symbol), { method: 'POST' });
         let data;
         try {
           data = await resp.json();
@@ -62,17 +75,17 @@
         // 展示信号和价格
         let output = `股票: ${data.symbol}\n最终资产: ${data.final_value}\n\n信号:\n`;
         if(data.signals && data.prices){
-			for(let i=0; i<data.signals.length; i++){
-				output += `Day ${i+1}: Price=${data.prices[i]}, Signal=${data.signals[i]}\n`;
-			}
-		} else {
-			output += JSON.stringify(data, null, 2);
-		}
-		document.getElementById('result').innerText = output;
-	  } catch (e) {
-		document.getElementById('result').innerText = '请求失败: ' + e.message;
-	  }
-	}
+          for(let i=0; i<data.signals.length; i++){
+            output += `Day ${i+1}: Price=${data.prices[i]}, Signal=${data.signals[i]}\n`;
+          }
+        } else {
+          output += JSON.stringify(data, null, 2);
+        }
+        document.getElementById('result').innerText = output;
+      } catch (e) {
+        document.getElementById('result').innerText = '请求失败: ' + e.message;
+      }
+    }
   </script>
 </body>
 </html>
