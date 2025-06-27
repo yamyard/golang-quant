@@ -1,45 +1,31 @@
 package data
 
-import "errors"
+import (
+    "errors"
+    "github.com/yamyard/golang-finance/yahoo"
+)
 
-// 暂时使用模拟数据，采用AAPL真实历史收盘价（2025年5月13日至2025年6月26日，共30个交易日）
+// FetchYahooData 通过调用 golang-finance 的 Yahoo 模块获取历史收盘价（例如近30个交易日）
 func FetchYahooData(symbol string) ([]float64, error) {
-    switch symbol {
-    case "AAPL":
-		return []float64{
-			212.93, // 2025-05-13
-			212.33, // 2025-05-14
-			211.45, // 2025-05-15
-			211.26, // 2025-05-16
-			208.78, // 2025-05-19
-			206.86, // 2025-05-20
-			202.09, // 2025-05-21
-			201.36, // 2025-05-22
-			195.27, // 2025-05-23
-			200.21, // 2025-05-27
-			200.42, // 2025-05-28
-			199.95, // 2025-05-29
-			200.85, // 2025-05-30
-			201.70, // 2025-06-02
-			203.27, // 2025-06-03
-			202.82, // 2025-06-04
-			200.63, // 2025-06-05
-			203.92, // 2025-06-06
-			201.45, // 2025-06-09
-			202.67, // 2025-06-10
-			198.78, // 2025-06-11
-			199.20, // 2025-06-12
-			196.45, // 2025-06-13
-			198.42, // 2025-06-16
-			195.64, // 2025-06-17
-			196.58, // 2025-06-18
-			201.00, // 2025-06-20
-			201.50, // 2025-06-23
-			200.30, // 2025-06-24
-			201.56, // 2025-06-25
-			201.00, // 2025-06-26
-		}, nil
-    default:
-        return nil, errors.New("暂不支持该股票代码或无历史数据")
+    // 这里 interval="1d"（日线），rangeStr="30d"（近30天）
+    resp, err := yahoo.GetHistory(symbol, "1d", "30d")
+    if err != nil {
+        return nil, err
     }
+    // 解析收盘价
+    if len(resp.Chart.Result) == 0 || len(resp.Chart.Result[0].Indicators.Quote) == 0 {
+        return nil, errors.New("无有效历史数据")
+    }
+    closes := resp.Chart.Result[0].Indicators.Quote[0].Close
+    // 移除为nil的收盘价（Yahoo偶尔数据有缺失，返回为nil）
+    res := make([]float64, 0, len(closes))
+    for _, v := range closes {
+        if v != 0 {
+            res = append(res, v)
+        }
+    }
+    if len(res) == 0 {
+        return nil, errors.New("历史数据全部为0")
+    }
+    return res, nil
 }
