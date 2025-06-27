@@ -3,7 +3,7 @@
 
 ## 安装依赖
 ```
-go run ./cmd/api/main.go
+go mod tidy
 ```
 
 ## 启动项目
