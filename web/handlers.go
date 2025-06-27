@@ -18,7 +18,13 @@ GetStockData 处理股票数据查询接口
 */
 func GetStockData(c *gin.Context) {
     symbol := c.Query("symbol")
-    prices, _ := data.FetchYahooData(symbol)
+    prices, err := data.FetchYahooData(symbol)
+    if err != nil || len(prices) == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "No price data found for symbol: " + symbol,
+        })
+        return
+    }
     c.JSON(http.StatusOK, gin.H{
         "symbol": symbol,
         "prices": prices,
@@ -37,7 +43,13 @@ RunBacktest 处理量化策略回测接口
 */
 func RunBacktest(c *gin.Context) {
     symbol := c.DefaultQuery("symbol", "AAPL")
-    prices, _ := data.FetchYahooData(symbol)
+    prices, err := data.FetchYahooData(symbol)
+    if err != nil || len(prices) == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "No price data found for symbol: " + symbol,
+        })
+        return
+    }
     signals := strategy.GenerateRSISignal(prices)
     finalValue := backtest.RunBacktest(prices, signals)
     c.JSON(http.StatusOK, gin.H{
