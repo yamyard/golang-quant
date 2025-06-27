@@ -25,7 +25,6 @@ golang-quant/
 └── 📄 README.md
 ```
 ## Description
-```
 Descriptions for each part:
 - backtest/
     Contains the core backtesting engine logic, responsible for simulating trading strategies over historical data.
@@ -89,4 +88,3 @@ Descriptions for each part:
 
     README.md
     The main documentation file, providing an overview and usage instructions for the project.
-```
