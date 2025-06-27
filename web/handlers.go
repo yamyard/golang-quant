@@ -19,9 +19,17 @@ GetStockData 处理股票数据查询接口
 func GetStockData(c *gin.Context) {
     symbol := c.Query("symbol")
     prices, err := data.FetchYahooData(symbol)
-    if err != nil || len(prices) == 0 {
+    if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{
-            "error": "No price data found for symbol: " + symbol,
+            "error": err.Error(),
+            "symbol": symbol,
+        })
+        return
+    }
+    if len(prices) == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "No price data available",
+            "symbol": symbol,
         })
         return
     }
@@ -30,6 +38,7 @@ func GetStockData(c *gin.Context) {
         "prices": prices,
     })
 }
+
 
 /*
 RunBacktest 处理量化策略回测接口
@@ -44,21 +53,32 @@ RunBacktest 处理量化策略回测接口
 func RunBacktest(c *gin.Context) {
     symbol := c.DefaultQuery("symbol", "AAPL")
     prices, err := data.FetchYahooData(symbol)
-    if err != nil || len(prices) == 0 {
+    if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{
-            "error": "No price data found for symbol: " + symbol,
+            "error": err.Error(),
+            "symbol": symbol,
         })
         return
     }
+    if len(prices) == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "No price data available",
+            "symbol": symbol,
+        })
+        return
+    }
+
     signals := strategy.GenerateRSISignal(prices)
     finalValue := backtest.RunBacktest(prices, signals)
+
     c.JSON(http.StatusOK, gin.H{
         "symbol":      symbol,
-	"final_value": finalValue,
-	"signals":     signals,
-	"prices":      prices,
+        "final_value": finalValue,
+        "signals":     signals,
+        "prices":      prices,
     })
 }
+
 
 /*
 GetChart 图表接口（预留实现）
