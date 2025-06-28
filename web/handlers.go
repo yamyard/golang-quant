@@ -81,14 +81,39 @@ func RunBacktest(c *gin.Context) {
 
 
 /*
-GetChart 图表接口（预留实现）
+GetChart 图表接口
 
-- 当前仅返回占位字符串，表示未来可扩展返回策略回测或行情的可视化图表数据
-- 返回格式为 JSON
+- 通过 GET 请求参数 "symbol" 获取需要查询的股票代码
+- 调用 data.FetchYahooData(symbol) 获取历史价格数据
+- 返回格式为 JSON，包含股票代码和“chart”数组，chart为 [{ "index": 1, "close": xxx }, ...]
 - 典型用途：前端请求图表数据用于可视化展示
 */
 func GetChart(c *gin.Context) {
+    symbol := c.DefaultQuery("symbol", "AAPL")
+    prices, err := data.FetchYahooData(symbol)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": err.Error(),
+            "symbol": symbol,
+        })
+        return
+    }
+    if len(prices) == 0 {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "No price data available",
+            "symbol": symbol,
+        })
+        return
+    }
+    chart := make([]gin.H, len(prices))
+    for i, v := range prices {
+        chart[i] = gin.H{
+            "index": i + 1,
+            "close": v,
+        }
+    }
     c.JSON(http.StatusOK, gin.H{
-        "chart": "（此处预留图表接口）",
+        "symbol": symbol,
+        "chart":  chart,
     })
 }
