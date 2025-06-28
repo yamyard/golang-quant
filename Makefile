@@ -1,7 +1,7 @@
 .PHONY: build clean
 
 build:
-	go build -o run cmd/api/main.go
+	go build -o golang-quant cmd/api/main.go
 
 clean:
-	rm -f run
+	rm -f golang-quant
