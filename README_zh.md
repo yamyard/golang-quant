@@ -9,7 +9,7 @@ go mod tidy
 ## 启动项目
 在终端中启动：
 ```
-make run
+sh run.sh
 ```
 启动后，访问浏览器中的地址：
 ```
