@@ -39,3 +39,6 @@ go.work.sum
 
 # Ignore all .bak files
 *.bak
+
+# Ignore .DS_Store
+.DS_Store
