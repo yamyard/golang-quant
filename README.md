@@ -9,7 +9,7 @@ go mod tidy
 ## Start the Project
 To start in the terminal:
 ```
-make run
+sh run.sh
 ```
 After starting, visit the following address in your browser:
 ```
