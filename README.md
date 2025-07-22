@@ -29,3 +29,8 @@ Then follow the instructions to enter the stock symbol in the textbox.
 - After clicking the button "Run Backtest" on the webpage, you will see:
   - Final account value
   - Daily RSI trading signals (BUY / SELL / HOLD)
+
+## Disclaimer
+
+This software is for educational and research purposes only. It is not financial advice. Use at your own risk.
+
